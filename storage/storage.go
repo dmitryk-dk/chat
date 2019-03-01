@@ -3,15 +3,14 @@ package storage
 import (
 	"database/sql"
 
-	"github.com/dmitryk-dk/chart/user"
+	"github.com/dmitryk-dk/chat/user"
 )
 
 type StoreInterface interface {
 	Create(user *user.User) error
-	Remove(user *user.User) error
+	Read(user *user.User) error
 	Update(id int) error
 	Delete(id int) error
-	Get(id int) error
 }
 
 type DbStore struct {
