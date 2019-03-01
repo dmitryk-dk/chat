@@ -8,8 +8,8 @@ import (
 
 type StoreInterface interface {
 	Create(user *user.User) error
-	Read(user *user.User) error
-	Update(id int) error
+	Read(id int) error
+	Update(user *user.User) error
 	Delete(id int) error
 }
 
