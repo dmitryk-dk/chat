@@ -19,7 +19,7 @@ type Message struct {
 	db   *sql.DB
 }
 
-func Create(msg *Message) error {
+func (msg *Message) Create() error {
 	row, err := msg.db.Query(
 		create,
 		msg.ID, msg.Text,

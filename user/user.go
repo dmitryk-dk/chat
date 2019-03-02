@@ -2,7 +2,6 @@ package user
 
 import (
 	"database/sql"
-	"os/user"
 	"strconv"
 	"time"
 
@@ -26,7 +25,7 @@ type User struct {
 
 // Create make request to database and set new user
 // to table users
-func Create(user *User) error {
+func (user *User) Create() error {
 	bs := []byte(strconv.Itoa(user.ID))
 	uuid, err := uuid.FromBytes(bs)
 	if err != nil {
@@ -43,8 +42,4 @@ func Create(user *User) error {
 	defer row.Close()
 
 	return nil
-}
-
-func Read(id int) (user.User, error) {
-
 }
