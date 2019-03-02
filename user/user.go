@@ -1,40 +1,34 @@
 package user
 
 import (
-	"database/sql"
-	"strconv"
-	"time"
-
-	"github.com/google/uuid"
+	"github.com/dmitryk-dk/chat/storage"
 )
 
 var (
 	create = `
-		INSERT INTO users (id, name, regDate, regTime) 
-		VALUES($1,$2,$3,$4)	
+		INSERT INTO users (nickname, regDate) 
+		VALUES(?,?)	
 	`
 )
 
 type User struct {
 	ID       int
 	Nickname string
-	RegDate  time.Time
-	RegTime  time.Time
-	db       *sql.DB
+	RegDate  string
+	DB       *storage.DbStore
 }
 
 // Create make request to database and set new user
 // to table users
 func (user *User) Create() error {
-	bs := []byte(strconv.Itoa(user.ID))
-	uuid, err := uuid.FromBytes(bs)
+	err := user.DB.DB.Ping()
 	if err != nil {
 		return err
 	}
 
-	row, err := user.db.Query(
+	row, err := user.DB.DB.Query(
 		create,
-		uuid, user.Nickname, user.RegDate, user.RegTime,
+		user.Nickname, user.RegDate,
 	)
 	if err != nil {
 		return err

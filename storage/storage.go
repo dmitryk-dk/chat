@@ -15,7 +15,7 @@ type StoreInterface interface {
 
 // DbStore describe a store struct
 type DbStore struct {
-	db *sql.DB
+	DB *sql.DB
 }
 
 // New return constructor of database connection
@@ -24,7 +24,5 @@ func New(driverName, dataSourceName string) (*DbStore, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer db.Close()
-
-	return &DbStore{db: db}, nil
+	return &DbStore{DB: db}, nil
 }
