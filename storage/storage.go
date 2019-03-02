@@ -8,6 +8,13 @@ import (
 	"github.com/google/uuid"
 )
 
+var (
+	create = `
+		INSERT INTO users (id, name, regDate, regTime) 
+		VALUES($1,$2,$3,$4)	
+	`
+)
+
 // StoreInterface describe methods which help work with
 // data base
 type StoreInterface interface {
@@ -22,7 +29,7 @@ type DbStore struct {
 	db *sql.DB
 }
 
-// Function Create make request to database and set new user
+// Create make request to database and set new user
 // to table users
 func (dbStore *DbStore) Create(user *user.User) error {
 	bs := []byte(strconv.Itoa(user.Id))
@@ -31,8 +38,8 @@ func (dbStore *DbStore) Create(user *user.User) error {
 		return err
 	}
 
-	row, err := dbStore.db.QueryRow(
-		"INSERT INTO users (id, name, regDate, regTime) VALUES(?,?,?,?)",
+	row, err := dbStore.db.Query(
+		create,
 		uuid, user.Nickname, user.RegDate, user.RegTime,
 	)
 	if err != nil {
