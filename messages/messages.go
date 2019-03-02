@@ -1,28 +1,27 @@
 package messages
 
 import (
-	"database/sql"
-
-	"github.com/google/uuid"
+	"github.com/dmitryk-dk/chat/storage"
 )
 
 var (
 	create = `
-		INSERT INTO message (id, text) 
-		VALUES($1,$2)
+		INSERT INTO message (userId, text, date) 
+		VALUES(?,?,?)
 	`
 )
 
 type Message struct {
-	ID   uuid.UUID
-	Text string
-	db   *sql.DB
+	UserID int
+	Text   string
+	Date   string
+	DB     *storage.DbStore
 }
 
 func (msg *Message) Create() error {
-	row, err := msg.db.Query(
+	row, err := msg.DB.DB.Query(
 		create,
-		msg.ID, msg.Text,
+		msg.UserID, msg.Text, msg.Date,
 	)
 	if err != nil {
 		return err
