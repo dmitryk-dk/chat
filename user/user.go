@@ -1,6 +1,10 @@
 package user
 
+import "time"
+
 type User struct {
-	id       int
-	nickname string
+	Id       int
+	Nickname string
+	RegDate  time.Time
+	RegTime  time.Time
 }
