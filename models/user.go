@@ -2,17 +2,19 @@ package models
 
 import (
 	"database/sql"
+
+	"github.com/google/uuid"
 )
 
 var (
 	createUser = `
-		INSERT INTO users (nickname, regDate) 
-		VALUES(?,?)	
+		INSERT INTO users (uuid, nickname, regDate) 
+		VALUES(?,?,?)	
 	`
 )
 
 type User struct {
-	ID       int
+	UUID     uuid.UUID
 	Nickname string
 	RegDate  string
 }
@@ -22,7 +24,7 @@ type User struct {
 func (user *User) Create(db *sql.DB) error {
 	rows, err := db.Query(
 		createUser,
-		user.Nickname, user.RegDate,
+		user.UUID, user.Nickname, user.RegDate,
 	)
 	if err != nil {
 		return err
