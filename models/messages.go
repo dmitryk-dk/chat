@@ -1,11 +1,11 @@
-package messages
+package models
 
 import (
-	"github.com/dmitryk-dk/chat/storage"
+	"database/sql"
 )
 
 var (
-	create = `
+	createMessage = `
 		INSERT INTO message (userId, text, date) 
 		VALUES(?,?,?)
 	`
@@ -15,12 +15,11 @@ type Message struct {
 	UserID int
 	Text   string
 	Date   string
-	DB     *storage.DbStore
 }
 
-func (msg *Message) Create() error {
-	row, err := msg.DB.DB.Query(
-		create,
+func (msg Message) Create(db *sql.DB) error {
+	row, err := db.Query(
+		createMessage,
 		msg.UserID, msg.Text, msg.Date,
 	)
 	if err != nil {
