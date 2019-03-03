@@ -2,6 +2,8 @@ package models
 
 import (
 	"database/sql"
+
+	"github.com/google/uuid"
 )
 
 var (
@@ -12,7 +14,7 @@ var (
 )
 
 type Message struct {
-	UserID int
+	UserID uuid.UUID
 	Text   string
 	Date   string
 }
