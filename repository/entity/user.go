@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"database/sql"
+
 	"github.com/google/uuid"
 )
 
@@ -22,7 +24,7 @@ type User struct {
 
 // Create make request to database and set new user
 // to table users
-func Create(user User) error {
+func (user *User) Create(db *sql.DB) error {
 	rows, err := db.Query(
 		createUser,
 		user.ID, user.Nickname, user.RegDate,
@@ -36,8 +38,7 @@ func Create(user User) error {
 }
 
 // GetUser return user from database
-func GetUser(uuid string) (User, error) {
-	var user User
+func (user *User) GetUser(db *sql.DB, uuid string) (User, error) {
 	rows, err := db.Query(
 		getUser,
 		uuid,
@@ -52,5 +53,5 @@ func GetUser(uuid string) (User, error) {
 			return User{}, err
 		}
 	}
-	return user, nil
+	return *user, nil
 }

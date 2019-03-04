@@ -4,7 +4,9 @@ import (
 	"log"
 	"time"
 
-	"github.com/dmitryk-dk/chat/models"
+	"github.com/dmitryk-dk/chat/storage"
+
+	repository "github.com/dmitryk-dk/chat/repository/entity"
 	"github.com/google/uuid"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -12,14 +14,14 @@ import (
 
 func main() {
 	var id uuid.UUID
-	var user models.User
-	db, err := models.NewDB("mysql", "dmitryk:dmitryk@tcp(localhost:3306)/chat")
+	var user repository.User
+	db, err := storage.NewDB("mysql", "dmitryk:dmitryk@tcp(localhost:3306)/chat")
 	defer db.Close()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	user, err = db.GetUser("0974b2c7-9c22-4c7c-b6cf-65a19fce2028")
+	user, err = user.GetUser(db, "0974b2c7-9c22-4c7c-b6cf-65a19fce2028")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -30,7 +32,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	user = models.User{id, "petya", dateTime}
+	user = user.User{id, "petya", dateTime}
 	err = user.Create(db.DB)
 	if err != nil {
 		log.Fatal(err)
