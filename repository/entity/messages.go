@@ -37,11 +37,11 @@ func (msg *Message) Create(db *sql.DB) error {
 }
 
 // GetMessages make request to db and return messages from userId
-func (msg *Message) GetMessages(db *sql.DB, userId string) ([]Message, error) {
-	messages := make([]Message, 1)
+func (msg *Message) GetMessages(db *sql.DB, userID string) ([]Message, error) {
+	var messages []Message
 	rows, err := db.Query(
 		getMessages,
-		userId,
+		userID,
 	)
 	if err != nil {
 		return []Message{}, err
