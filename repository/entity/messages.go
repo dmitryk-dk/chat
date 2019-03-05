@@ -1,8 +1,6 @@
 package repository
 
 import (
-	"database/sql"
-
 	"github.com/google/uuid"
 )
 
@@ -23,7 +21,7 @@ type Message struct {
 }
 
 // Create make request to db and make row with new message
-func (msg *Message) Create(db *sql.DB) error {
+func (msg *Message) Create() error {
 	row, err := db.Query(
 		createMessage,
 		msg.UserID, msg.Text, msg.Date,
@@ -37,7 +35,7 @@ func (msg *Message) Create(db *sql.DB) error {
 }
 
 // GetMessages make request to db and return messages from userId
-func (msg *Message) GetMessages(db *sql.DB, userID string) ([]Message, error) {
+func (msg *Message) GetMessages(userID string) ([]Message, error) {
 	var messages []Message
 	rows, err := db.Query(
 		getMessages,

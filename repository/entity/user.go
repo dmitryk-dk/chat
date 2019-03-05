@@ -24,7 +24,7 @@ type User struct {
 
 // Create make request to database and set new user
 // to table users
-func (user *User) Create(db *sql.DB) error {
+func (user *User) Create() error {
 	rows, err := db.Query(
 		createUser,
 		user.ID, user.Nickname, user.RegDate,
@@ -38,7 +38,7 @@ func (user *User) Create(db *sql.DB) error {
 }
 
 // GetUser return user from database
-func (user *User) GetUser(db *sql.DB, uuid string) (User, error) {
+func (user *User) GetUser(uuid string) (User, error) {
 	rows, err := db.Query(
 		getUser,
 		uuid,

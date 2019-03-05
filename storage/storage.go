@@ -18,7 +18,7 @@ type StorageInteface interface {
 
 // DB describe a store struct
 type DB struct {
-	*sql.DB
+	db *sql.DB
 }
 
 // NewDB return constructor of database connection
@@ -30,5 +30,5 @@ func NewDB(driverName, dataSourceName string) (*DB, error) {
 	if err = db.Ping(); err != nil {
 		return nil, err
 	}
-	return &DB{db}, nil
+	return &DB{db: db}, nil
 }
