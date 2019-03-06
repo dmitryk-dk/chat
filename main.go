@@ -5,11 +5,11 @@ import (
 
 	"github.com/dmitryk-dk/chat/storage"
 
-	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/lib/pq"
 )
 
 func main() {
-	_, err := storage.NewDB("mysql", "dmitryk:dmitryk@tcp(localhost:3306)/chat")
+	_, err := storage.NewDB("postgres", "")
 	if err != nil {
 		log.Fatal(err)
 	}
