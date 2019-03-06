@@ -3,17 +3,17 @@ package storage
 import (
 	"database/sql"
 
-	repository "github.com/dmitryk-dk/chat/repository/entity"
+	"github.com/dmitryk-dk/chat/model"
 	"github.com/google/uuid"
 )
 
 // StorageInteface describe method for working with store
 type StorageInteface interface {
-	CreateUser(user repository.User) error
-	GetUser(userID string) (repository.User, error)
+	CreateUser(user model.User) error
+	GetUser(userID uuid.UUID) (model.User, error)
 
-	CreateMessage(msg repository.Message) error
-	GetMessages(userID uuid.UUID) ([]repository.Message, error)
+	CreateMessage(msg model.Message) error
+	GetMessages(userID uuid.UUID) ([]model.Message, error)
 }
 
 // DB describe a store struct
@@ -24,6 +24,7 @@ type DB struct {
 // NewDB return constructor of database connection
 func NewDB(driverName, dataSourceName string) (*DB, error) {
 	db, err := sql.Open(driverName, dataSourceName)
+	defer db.Close()
 	if err != nil {
 		return nil, err
 	}

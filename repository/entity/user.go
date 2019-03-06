@@ -3,6 +3,7 @@ package repository
 import (
 	"database/sql"
 
+	"github.com/dmitryk-dk/chat/model"
 	"github.com/google/uuid"
 )
 
@@ -16,16 +17,14 @@ var (
 	`
 )
 
-type User struct {
-	ID       uuid.UUID
-	Nickname string
-	RegDate  string
+type UserRepository struct {
+	DB *sql.DB
 }
 
 // Create make request to database and set new user
 // to table users
-func (user *User) Create() error {
-	rows, err := db.Query(
+func (usr *UserRepository) Create(user model.User) error {
+	rows, err := usr.DB.Query(
 		createUser,
 		user.ID, user.Nickname, user.RegDate,
 	)
@@ -38,20 +37,21 @@ func (user *User) Create() error {
 }
 
 // GetUser return user from database
-func (user *User) GetUser(uuid string) (User, error) {
-	rows, err := db.Query(
+func (usr *UserRepository) GetUser(uuid uuid.UUID) (model.User, error) {
+	var user model.User
+	rows, err := usr.DB.Query(
 		getUser,
 		uuid,
 	)
 	if err != nil {
-		return User{}, err
+		return model.User{}, err
 	}
 
 	for rows.Next() {
 		err := rows.Scan(&user.ID, &user.Nickname, &user.RegDate)
 		if err != nil {
-			return User{}, err
+			return model.User{}, err
 		}
 	}
-	return *user, nil
+	return user, nil
 }

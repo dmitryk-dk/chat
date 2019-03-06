@@ -1,6 +1,9 @@
 package repository
 
 import (
+	"database/sql"
+
+	"github.com/dmitryk-dk/chat/model"
 	"github.com/google/uuid"
 )
 
@@ -14,17 +17,15 @@ var (
 	`
 )
 
-type Message struct {
-	UserID uuid.UUID
-	Text   string
-	Date   string
+type MessageRepository struct {
+	DB *sql.DB
 }
 
 // Create make request to db and make row with new message
-func (msg *Message) Create() error {
-	row, err := db.Query(
+func (msg *MessageRepository) Create(message model.Message) error {
+	row, err := msg.DB.Query(
 		createMessage,
-		msg.UserID, msg.Text, msg.Date,
+		message.UserID, message.Text, message.Date,
 	)
 	if err != nil {
 		return err
@@ -35,24 +36,25 @@ func (msg *Message) Create() error {
 }
 
 // GetMessages make request to db and return messages from userId
-func (msg *Message) GetMessages(userID string) ([]Message, error) {
-	var messages []Message
-	rows, err := db.Query(
+func (msg *MessageRepository) GetMessages(userID uuid.UUID) ([]model.Message, error) {
+	var message model.Message
+	var messages []model.Message
+	rows, err := msg.DB.Query(
 		getMessages,
 		userID,
 	)
 	if err != nil {
-		return []Message{}, err
+		return []model.Message{}, err
 	}
 
 	for rows.Next() {
-		err := rows.Scan(&msg.UserID, &msg.Text, &msg.Date)
+		err := rows.Scan(&message.UserID, &message.Text, &message.Date)
 		if err != nil {
-			return []Message{}, err
+			return []model.Message{}, err
 		}
 	}
 
-	messages = append(messages, *msg)
+	messages = append(messages, message)
 
 	return messages, nil
 }
