@@ -3,13 +3,14 @@ package main
 import (
 	"log"
 
-	"github.com/dmitryk-dk/chat/storage"
+	repository "github.com/dmitryk-dk/chat/repository"
 
 	_ "github.com/lib/pq"
 )
 
 func main() {
-	_, err := storage.NewDB("postgres", "")
+	db, err := repository.NewDB("postgres", "")
+	defer repository.Close(db)
 	if err != nil {
 		log.Fatal(err)
 	}
