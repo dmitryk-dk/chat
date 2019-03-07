@@ -8,13 +8,10 @@ import (
 )
 
 var (
-	createMessage = `
-		INSERT INTO message (userId, text, date) 
-		VALUES(?,?,?)
-	`
-	getMessages = `
-		SELECT userId, text, date FROM message WHERE userId = ?
-	`
+	createMsg = `INSERT INTO messages (userId, text, date) VALUES(?,?,?)`
+	readMsg   = `SELECT userId, text, date FROM messages WHERE userId = ?`
+	updateMsg = `UPDATE messages SET userId=$1, text=$2, date=$3 WHERE userId=$1, UserId, Text, Date`
+	deleteMsg = `DELETE FROM messages WHERE userId=$1, UserId`
 )
 
 type MessageRepository struct {
@@ -24,7 +21,7 @@ type MessageRepository struct {
 // Create make request to db and make row with new message
 func (msg *MessageRepository) Create(message model.Message) error {
 	row, err := msg.DB.Query(
-		createMessage,
+		createMsg,
 		message.UserID, message.Text, message.Date,
 	)
 	if err != nil {
@@ -39,10 +36,7 @@ func (msg *MessageRepository) Create(message model.Message) error {
 func (msg *MessageRepository) GetMessages(userID uuid.UUID) ([]model.Message, error) {
 	var message model.Message
 	var messages []model.Message
-	rows, err := msg.DB.Query(
-		getMessages,
-		userID,
-	)
+	rows, err := msg.DB.Query(readMsg, userID)
 	if err != nil {
 		return []model.Message{}, err
 	}
@@ -57,4 +51,35 @@ func (msg *MessageRepository) GetMessages(userID uuid.UUID) ([]model.Message, er
 	messages = append(messages, message)
 
 	return messages, nil
+}
+
+// DeleteMessage delete message from database
+func (msg *MessageRepository) DeleteMessage(userID uuid.UUID) error {
+	res, err := msg.DB.Exec(deleteMsg, userID)
+	if err == nil {
+		_, err := res.RowsAffected()
+		if err == nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+// UpdateMessage update message in database
+func (msg *MessageRepository) UpdateMessage(message model.Message) error {
+	res, err := msg.DB.Exec(
+		updateMsg,
+		message.UserID,
+		message.Text,
+		message.Date,
+	)
+	if err == nil {
+		_, err := res.RowsAffected()
+		if err == nil {
+			return err
+		}
+	}
+
+	return nil
 }
