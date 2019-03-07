@@ -36,5 +36,5 @@ func NewDB(driverName, dataSourceName string) (*DB, error) {
 
 // Close database connection
 func Close(db *DB) {
-	defer db.db.Close()
+	return db.db.Close()
 }
