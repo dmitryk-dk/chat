@@ -14,6 +14,8 @@ var (
 	deleteUsr = `DELETE FROM users WHERE userId=$1, ID`
 )
 
+// UserRepository describe the message instance
+// for work with database
 type UserRepository struct {
 	DB *sql.DB
 }
