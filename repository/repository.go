@@ -3,10 +3,6 @@ package repository
 import (
 	"database/sql"
 
-	"github.com/mattes/migrate"
-	"github.com/mattes/migrate/database/postgres"
-	"github.com/mattes/migrate/source/file"
-
 	"github.com/dmitryk-dk/chat/model"
 	"github.com/google/uuid"
 )
@@ -40,66 +36,4 @@ func NewDB(driverName, dataSourceName string) (*DB, error) {
 // Close database connection
 func Close(db *DB) error {
 	return db.db.Close()
-}
-
-// MigrateUp migrate tabled to dataabase
-func MigrateUp(db *DB) error {
-	driver, err := postgres.WithInstance(db.db, &postgres.Config{})
-	if err != nil {
-		return err
-	}
-
-	fsrc, err := (&file.File{}).Open("file://repository/migrations")
-	if err != nil {
-		return err
-	}
-
-	m, err := migrate.NewWithInstance("file", fsrc, "postgres", driver)
-	if err != nil {
-		return err
-	}
-
-	err = m.Steps(2)
-	if err != nil {
-		return err
-	}
-
-	err = m.Up()
-	if err != nil {
-		return err
-	}
-
-	defer m.Close()
-	return nil
-}
-
-// MigrateDown drop tables from database
-func MigrateDown(db *DB) error {
-	driver, err := postgres.WithInstance(db.db, &postgres.Config{})
-	if err != nil {
-		return err
-	}
-
-	fsrc, err := (&file.File{}).Open("file://repository/migrations")
-	if err != nil {
-		return err
-	}
-
-	m, err := migrate.NewWithInstance("file", fsrc, "postgres", driver)
-	if err != nil {
-		return err
-	}
-
-	err = m.Steps(2)
-	if err != nil {
-		return err
-	}
-
-	err = m.Down()
-	if err != nil {
-		return err
-	}
-
-	defer m.Close()
-	return nil
 }
