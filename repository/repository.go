@@ -24,7 +24,6 @@ type DB struct {
 // NewDB return constructor of database connection
 func NewDB(driverName, dataSourceName string) (*DB, error) {
 	db, err := sql.Open(driverName, dataSourceName)
-	defer db.Close()
 	if err != nil {
 		return nil, err
 	}
